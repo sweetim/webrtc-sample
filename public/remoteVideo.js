@@ -5,15 +5,27 @@ const startButton = document.getElementById('start')
 const callButton = document.getElementById('call')
 const sendButton = document.getElementById('send')
 
-getCameraInputOptions().then((devices) => {
-    devices.map((device) => {
-        const opt = document.createElement('option');
-        opt.value = device.deviceId;
-        opt.innerHTML = device.label;
-
-        return opt;
-    }).forEach((opt) => cameraInputSelect.appendChild(opt))
-});
+navigator
+    .getUserMedia({
+        video: true,
+        audio: true
+    },
+    () => {
+        navigator.mediaDevices.enumerateDevices()
+            .then(devices => {
+                devices
+                    .filter((device) => device.kind === 'videoinput')
+                    .map((device) => {
+                        const opt = document.createElement('option');
+                        opt.value = device.deviceId;
+                        opt.innerHTML = device.label;
+                        
+                        return opt;
+                    })
+                    .forEach((opt) => cameraInputSelect.appendChild(opt))
+            })
+    },
+    () => {})
 
 const localConnection = new RTCPeerConnection(null);
 const socket = io.connect('https://' + window.location.host);
@@ -89,6 +101,7 @@ function getCameraInputOptions() {
                 });
 
                 resolve(videoDevices);
-            });
+            })
+            .catch(reject)
     })
 }
