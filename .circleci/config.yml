@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: docker
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build -t webrtc-sample .
+      - run: docker tag webrtc-sample timx/webrtc-sample
+      - run: docker push timx/webrtc-sample
+      
+
+
+
