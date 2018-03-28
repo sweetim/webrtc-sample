@@ -1,3 +1,18 @@
+navigator.mediaDevices.enumerateDevices()
+    .then(devices => {
+        const videoDevices = [0, 0];
+        let videoDeviceIndex = 0;
+        devices.forEach(function (device) {
+            console.log(device.kind + ": " + device.label +
+                " id = " + device.deviceId);
+            if (device.kind == "videoinput") {
+                videoDevices[videoDeviceIndex++] = device.deviceId;
+            }
+        });
+
+        console.log(videoDevices)
+    });
+
 const localVideo = document.getElementById('local');
 const remoteVideo = document.getElementById('remote');
 const callButton = document.getElementById('call')
@@ -7,7 +22,11 @@ const localConnection = new RTCPeerConnection(null);
 const socket = io.connect('https://' + window.location.host);
 
 navigator.getUserMedia({
-    video: true
+    video: {
+        deviceId: {
+            exact: '6c8bc5d97435cc5edb2527029c7db52051fb92930c799c3070696b2724c74026'
+        }
+    }
 }, (stream) => {
     localVideo.srcObject = stream;
 
