@@ -9,17 +9,28 @@ const options = {
 };
 
 const https = require('https');
-const server = https.createServer(options, app)
-const io = require('socket.io')(server);
+const http = require('http')
+const httpsServer = https.createServer(options, app)
+const httpServer = http.createServer(app)
+
+const io = require('socket.io')();
 
 app.use(express.static('public'));
 
-server.listen(3000, () => {
-    console.log('server started');
+httpsServer.listen(3000, () => {
+    console.log('https server started in port 3000');
 });
+
+httpServer.listen(3001, () => {
+    console.log('http server started in port 3001');
+});
+
+io.attach(httpServer)
+io.attach(httpsServer)
 
 io.on('connection', (socket) => {
     socket.on('data', (data) => {
+        console.log(data);
         socket.broadcast.emit('data', data);
     });
 });
