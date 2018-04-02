@@ -36,6 +36,7 @@ const localConnection = new RTCPeerConnection({
         }
     ]
 });
+
 const socket = io.connect('https://' + window.location.host);
 
 function sendTo(socket, type, payload) {
@@ -98,18 +99,4 @@ startButton.onclick = () => {
     }, (e) => {
         console.log(e);
     });
-}
-
-function getCameraInputOptions() {
-    return new Promise((resolve, reject) => {
-        navigator.mediaDevices.enumerateDevices()
-            .then(devices => {
-                const videoDevices = devices.filter((device) => {
-                    return (device.kind === 'videoinput')
-                });
-
-                resolve(videoDevices);
-            })
-            .catch(reject)
-    })
 }
