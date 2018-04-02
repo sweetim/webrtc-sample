@@ -27,7 +27,15 @@ navigator
     },
     () => {})
 
-const localConnection = new RTCPeerConnection(null);
+const localConnection = new RTCPeerConnection({
+    iceServers: [
+        {
+            urls: [
+                'stun:stun.l.google.com:19302'
+            ]
+        }
+    ]
+});
 const socket = io.connect('https://' + window.location.host);
 
 function sendTo(socket, type, payload) {
